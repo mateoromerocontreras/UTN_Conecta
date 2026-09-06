@@ -7,6 +7,7 @@ import com.seminario.pasantias.dto.response.PasantiaResponseDTO;
 import com.seminario.pasantias.entity.EstadoPasantia;
 import com.seminario.pasantias.security.SecurityService;
 import com.seminario.pasantias.service.PasantiaService;
+import com.seminario.pasantias.response.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -98,12 +99,10 @@ public class PasantiaController {
     @PostMapping("/registrar")
     @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'EMPRESA')")
-    public ResponseEntity<Map<String, Object>> registrarPasantia(@Valid @RequestBody PasantiaRequestDTO request) {
-    	// TODO implement this methods
+    public ResponseEntity<ApiResponse<PasantiaResponseDTO>> registrarPasantia(@Valid @RequestBody PasantiaRequestDTO request) {
     	securityService.validarPermisoCrearPasantia(request.getIdEmpresa());
     	PasantiaResponseDTO pasantia = pasantiaService.crearPasantia(request);
-    	// return ResponseEntity.ok();
-    	throw new UnsupportedOperationException("Not implemented yet");
+    	return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(pasantia, "Pasantía registrada exitosamente"));
     }
 
     /**
