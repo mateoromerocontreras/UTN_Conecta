@@ -49,6 +49,10 @@ build/
 # IDE files
 .vscode/
 .idea/
+.project
+.classpath
+.settings/
+bin/
 *.swp
 *.swo
 *~

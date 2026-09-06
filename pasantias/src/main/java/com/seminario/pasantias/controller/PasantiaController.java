@@ -49,23 +49,28 @@ public class PasantiaController {
     private static final String KEY_MENSAJE = "mensaje";
     private static final String KEY_DATA = "data";
 
-    /** Servicio que contiene la lógica de negocio para pasantías */
-    @Autowired
-    private PasantiaService pasantiaService;
 
-    /** Servicio que maneja la seguridad y validación de permisos */
-    @Autowired
-    private SecurityService securityService;
+    private final PasantiaService pasantiaService;
+    private final SecurityService securityService;
+
+    public PasantiaController(PasantiaService pasantiaService, SecurityService securityService) {
+        this.pasantiaService = pasantiaService;
+        this.securityService = securityService;
+    }
 
     /**
-     * Obtiene todas las pasantías del sistema (para administradores).
+     * Obtiene todas las pasantías del sistema.
+     * 
+     * <p>Este endpoint requiere autenticación y retorna todas las pasantías
+     * independientemente de su estado. Los usuarios solo verán las pasantías
+     * según sus permisos definidos en el servicio de seguridad.
+     * 
+     * @return ResponseEntity con lista de PasantiaResponseDTO y código HTTP 200 (OK)
+     * @see PasantiaResponseDTO
      */
     @GetMapping(produces = CONTENT_TYPE_JSON_UTF8)
     public ResponseEntity<List<PasantiaResponseDTO>> getAllPasantias() {
-        List<PasantiaResponseDTO> pasantias = pasantiaService.obtenerTodasLasPasantias();
-        return ResponseEntity.ok()
-                .header(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON_UTF8)
-                .body(pasantias);
+        return ResponseEntity.ok(pasantiaService.obtenerTodasLasPasantias());
     }
 
     /**
